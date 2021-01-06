@@ -77,11 +77,7 @@ const Show = () => {
       />
       <InfoBlock>
         <h2>Details</h2>
-        <Details
-          status={show.status}
-          network={show.network}
-          premiered={show.premierred}
-        />
+        <Details status={show.status} network={show.network} premiered={show.premierred} />
       </InfoBlock>
       <InfoBlock>
         <h2>Seasons</h2>
