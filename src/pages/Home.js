@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import ActorGrid from '../components/actor/ActorGrid';
 import CustomRadio from '../components/CustomRadio';
 import MainPageLayout from '../components/MainPageLayout';
@@ -10,6 +10,23 @@ import {
   SearchButtonWrapper,
   SearchInput,
 } from './Home.styled';
+
+
+const renderResults = (results) => {
+  if (results && results.length === 0) {
+    return <div>No results</div>;
+  }
+
+  if (results && results.length > 0) {
+    return results[0].show ? (
+      <ShowGrid data={results} />
+    ) : (
+      <ActorGrid data={results} />
+    );
+  }
+
+  return null;
+};
 
 const Home = () => {
   const [input, setInput] = useLastQuery();
@@ -24,9 +41,10 @@ const Home = () => {
     });
   };
 
-  const onInputChange = ev => {
+
+  const onInputChange = useCallback(ev => {
     setInput(ev.target.value);
-  };
+  }, [setInput]);
 
   const onKeyDown = ev => {
     if (ev.keyCode === 13) {
@@ -34,25 +52,13 @@ const Home = () => {
     }
   };
 
-  const onRadioChange = ev => {
+  const onRadioChange = useCallback(ev => {
     setSearchOption(ev.target.value);
-  };
+  }, []);
 
-  const renderResults = () => {
-    if (results && results.length === 0) {
-      return <div>No results</div>;
-    }
+ 
 
-    if (results && results.length > 0) {
-      return results[0].show ? (
-        <ShowGrid data={results} />
-      ) : (
-        <ActorGrid data={results} />
-      );
-    }
 
-    return null;
-  };
 
   return (
     <MainPageLayout>
@@ -67,24 +73,22 @@ const Home = () => {
       <RadioInputsWrapper>
         <div>
           <CustomRadio
-          label="Shows"
+            label="Shows"
             id="shows-search"
             value="shows"
             checked={isShowSearch}
             onChange={onRadioChange}
           />
-        
         </div>
         <div>
-        <CustomRadio
-          label="Actors"
-          id="actors-search"
-          type="radio"
-          value="people"
-          checked={!isShowSearch}
-          onChange={onRadioChange}
+          <CustomRadio
+            label="Actors"
+            id="actors-search"
+            type="radio"
+            value="people"
+            checked={!isShowSearch}
+            onChange={onRadioChange}
           />
-          
         </div>
       </RadioInputsWrapper>
       <SearchButtonWrapper>
@@ -93,7 +97,7 @@ const Home = () => {
         </button>
       </SearchButtonWrapper>
 
-      {renderResults()}
+      {renderResults(results)}
     </MainPageLayout>
   );
 };
